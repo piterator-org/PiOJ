@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	pioj "github.com/piterator-org/pioj/app"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -23,7 +24,5 @@ func main() {
 	}()
 	database := client.Database("pioj")
 
-	App{http.DefaultServeMux, database}.Handle()
-
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", pioj.NewApp(database).ServeMux)
 }

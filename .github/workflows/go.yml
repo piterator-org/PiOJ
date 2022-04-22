@@ -38,5 +38,5 @@ jobs:
 
       - name: Test
         run: |
-          go test -v -race -coverprofile=coverage.txt -covermode=atomic
+          go test ./app -v -race -coverprofile=coverage.txt -covermode=atomic
           bash <(curl -s https://codecov.io/bash)

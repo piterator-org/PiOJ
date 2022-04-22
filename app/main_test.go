@@ -1,4 +1,4 @@
-package main
+package pioj
 
 import (
 	"bytes"
@@ -18,15 +18,15 @@ import (
 )
 
 func TestFileServer(t *testing.T) {
-	os.Mkdir("dist", os.FileMode(0755))
-	if file, err := os.OpenFile("dist/index.html", os.O_RDWR|os.O_CREATE, os.FileMode(0644)); err != nil {
+	os.Mkdir("../dist", os.FileMode(0755))
+	if file, err := os.OpenFile("../dist/index.html", os.O_RDWR|os.O_CREATE, os.FileMode(0644)); err != nil {
 		t.Error(err.Error())
-	} else if fi, _ := os.Stat("dist/index.html"); fi.Size() == 0 {
+	} else if fi, _ := os.Stat("../dist/index.html"); fi.Size() == 0 {
 		file.WriteString("\n")
 	}
 
 	mux := http.NewServeMux()
-	App{mux, nil}.Handle()
+	App{ServeMux: mux, Root: "../dist/", Fallback: "../dist/index.html"}.Handle()
 
 	t.Run("GET/", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -68,7 +68,7 @@ func TestProblem(t *testing.T) {
 	database := client.Database("test")
 	database.Drop(ctx)
 	mux := http.NewServeMux()
-	App{mux, database}.Handle()
+	App{ServeMux: mux, Database: database}.Handle()
 
 	post := func(path string, body io.Reader) *http.Response {
 		w := httptest.NewRecorder()
