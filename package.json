@@ -42,5 +42,8 @@
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
-  }
+  },
+  "browserslist": [
+    "defaults"
+  ]
 }
