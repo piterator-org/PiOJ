@@ -9,12 +9,49 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+func TestFileServer(t *testing.T) {
+	os.Mkdir("dist", os.FileMode(0755))
+	if file, err := os.OpenFile("dist/index.html", os.O_RDWR|os.O_CREATE, os.FileMode(0644)); err != nil {
+		t.Error(err.Error())
+	} else if fi, _ := os.Stat("dist/index.html"); fi.Size() == 0 {
+		file.WriteString("\n")
+	}
+
+	mux := http.NewServeMux()
+	App{mux, nil}.Handle()
+
+	t.Run("GET/", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, req)
+		resp := w.Result()
+		if resp.StatusCode != http.StatusOK {
+			t.Errorf("Unexpected status code at %s: %d", req.URL.Path, resp.StatusCode)
+		}
+	})
+
+	t.Run("GET/404", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/404", nil)
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, req)
+		resp := w.Result()
+		if resp.StatusCode != http.StatusOK {
+			t.Errorf("Unexpected status code at %s: %d", req.URL.Path, resp.StatusCode)
+		}
+		contentType := resp.Header.Get("Content-Type")
+		if contentType != "text/html; charset=utf-8" {
+			t.Errorf("Unexpected Content-Type at %s: %s", req.URL.Path, contentType)
+		}
+	})
+}
 
 func TestProblem(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
@@ -47,7 +84,7 @@ func TestProblem(t *testing.T) {
 	request := func(path string, data any, i int) (Problem, error) {
 		resp := postjson(path, data)
 		if resp.StatusCode != http.StatusOK {
-			return Problem{}, fmt.Errorf("[%d] Status code of %s: %d", i, path, resp.StatusCode)
+			return Problem{}, fmt.Errorf("[%d] Unexpected status code at %s: %d", i, path, resp.StatusCode)
 		}
 		var problem Problem
 		if err := json.NewDecoder(resp.Body).Decode(&problem); err != nil {
@@ -63,14 +100,18 @@ func TestProblem(t *testing.T) {
 
 	t.Run("create", func(t *testing.T) {
 		for i := 1; i <= n; i++ {
-			if _, err := request("/problem/create", map[string]string{"title": fmt.Sprint("Problem ", i), "content": "Content"}, i); err != nil {
+			if _, err := request(
+				"/api/problem/create",
+				map[string]string{"title": fmt.Sprint("Problem ", i), "content": "Content"},
+				i,
+			); err != nil {
 				t.Error(err.Error())
 			}
 		}
 	})
 
 	t.Run("create 400", func(t *testing.T) {
-		resp := post("/problem/create", bytes.NewBufferString("{"))
+		resp := post("/api/problem/create", bytes.NewBufferString("{"))
 		if resp.StatusCode != http.StatusBadRequest {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}
@@ -78,7 +119,7 @@ func TestProblem(t *testing.T) {
 
 	t.Run("get", func(t *testing.T) {
 		for i := 1; i <= n; i++ {
-			if problem, err := request("/problem/get", map[string]int{"id": i}, i); err != nil {
+			if problem, err := request("/api/problem/get", map[string]int{"id": i}, i); err != nil {
 				t.Error(err.Error())
 			} else {
 				if problem.Title != fmt.Sprint("Problem ", i) {
@@ -89,14 +130,14 @@ func TestProblem(t *testing.T) {
 	})
 
 	t.Run("get 404", func(t *testing.T) {
-		resp := postjson("/problem/get", map[string]int{"id": n + 1})
+		resp := postjson("/api/problem/get", map[string]int{"id": n + 1})
 		if resp.StatusCode != http.StatusNotFound {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}
 	})
 
 	t.Run("get 400", func(t *testing.T) {
-		resp := post("/problem/get", bytes.NewBufferString("{"))
+		resp := post("/api/problem/get", bytes.NewBufferString("{"))
 		if resp.StatusCode != http.StatusBadRequest {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}

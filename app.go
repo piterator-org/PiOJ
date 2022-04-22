@@ -21,8 +21,41 @@ type App struct {
 	Database *mongo.Database
 }
 
+type NotFoundFallbackRespWr struct {
+	http.ResponseWriter // We embed http.ResponseWriter
+	status              int
+}
+
+func (w *NotFoundFallbackRespWr) WriteHeader(status int) {
+	w.status = status // Store the status for our own use
+	if status != http.StatusNotFound {
+		w.ResponseWriter.WriteHeader(status)
+	}
+}
+
+func (w *NotFoundFallbackRespWr) Write(p []byte) (int, error) {
+	if w.status != http.StatusNotFound {
+		return w.ResponseWriter.Write(p)
+	}
+	return len(p), nil // Lie that we successfully written it
+}
+
+func wrapHandler(h http.Handler, fallback string, contentType string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		nfrw := &NotFoundFallbackRespWr{ResponseWriter: w}
+		h.ServeHTTP(nfrw, r)
+		if nfrw.status == http.StatusNotFound {
+			w.Header().Set("Content-Type", contentType)
+			http.ServeFile(w, r, fallback)
+		}
+	}
+}
+
 func (app App) Handle() *http.ServeMux {
-	app.ServeMux.HandleFunc("/problem/create", func(w http.ResponseWriter, r *http.Request) {
+	fs := wrapHandler(http.FileServer(http.Dir("dist/")), "dist/index.html", "text/html; charset=utf-8")
+	app.ServeMux.Handle("/", http.StripPrefix("/", fs))
+
+	app.ServeMux.HandleFunc("/api/problem/create", func(w http.ResponseWriter, r *http.Request) {
 		var problem Problem
 		if err := json.NewDecoder(r.Body).Decode(&problem); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -49,7 +82,7 @@ func (app App) Handle() *http.ServeMux {
 		}
 	})
 
-	app.ServeMux.HandleFunc("/problem/get", func(w http.ResponseWriter, r *http.Request) {
+	app.ServeMux.HandleFunc("/api/problem/get", func(w http.ResponseWriter, r *http.Request) {
 		var body struct{ ID int }
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
