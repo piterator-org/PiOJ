@@ -67,8 +67,7 @@ func TestProblem(t *testing.T) {
 	}()
 	database := client.Database("test")
 	database.Drop(ctx)
-	mux := http.NewServeMux()
-	App{ServeMux: mux, Database: database}.Handle()
+	mux := NewApp(database).ServeMux
 
 	post := func(path string, body io.Reader) *http.Response {
 		w := httptest.NewRecorder()
