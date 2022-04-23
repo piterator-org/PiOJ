@@ -40,9 +40,7 @@
           <h5>About</h5>
           <ul class="list-unstyled text-small">
             <li>
-              <router-link to="/about" class="link-secondary"
-                >About</router-link
-              >
+              <router-link :to="{ name: 'about' }" class="link-secondary">About</router-link>
             </li>
             <li><a class="link-secondary" href="#">Contact Us</a></li>
             <li><a class="link-secondary" href="#">Privacy</a></li>

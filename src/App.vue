@@ -1,7 +1,11 @@
 <template>
   <div class="bg-light">
     <SiteHeader />
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <transition name="fade-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
     <SiteFooter />
   </div>
 </template>
@@ -22,7 +26,24 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+ ;
+</style>
+
+<style>
 .rounded-mx {
   border-radius: 0.5em;
+}
+</style>
+
+<style scoped>
+.fade-in-enter-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-in-enter-from {
+  opacity: 0;
+}
+.fade-in-leave-to {
+  display: none;
 }
 </style>

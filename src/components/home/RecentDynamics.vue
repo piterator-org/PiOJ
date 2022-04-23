@@ -57,11 +57,14 @@
             <div class="col-12 mt-3" v-for="problem in problems" :key="problem.id">
               <div class="card">
                 <div class="card-body">
-                  <a class="text-decoration-none" href="#">
+                  <router-link
+                    class="text-decoration-none"
+                    :to="{ name: 'problem_detail', params: { id: problem.id } }"
+                  >
                     <h5 class="card-title text-ellipsis">
                       {{ problem.title }}
                     </h5>
-                  </a>
+                  </router-link>
                   <p class="card-text">
                     <span class="text-muted">#{{ problem.id }}</span> &middot;
                     {{ problem.difficulty }} &middot; by {{ problem.provider.username }}
@@ -234,25 +237,25 @@ export default defineComponent({
     ],
     problems: [
       {
-        id: '8f73a2b5',
+        id: 4,
         title: 'Problem Title 4',
         difficulty: 'Easy',
         provider: wbh07,
       },
       {
-        id: '44ba7801',
+        id: 3,
         title: 'Problem Title 3',
         difficulty: 'Master',
         provider: wxh06,
       },
       {
-        id: '091d7b2a',
+        id: 2,
         title: 'Problem Title 2',
         difficulty: 'Terrible',
         provider: wbh07,
       },
       {
-        id: 'bf5c07c4',
+        id: 1,
         title: 'Problem Title 1',
         difficulty: 'Noob',
         provider: wbh07,
