@@ -25,22 +25,25 @@
 </template>
 
 <script>
-import { Vue } from 'vue-class-component';
+import { defineComponent } from 'vue';
 
-export default class RecentDynamics extends Vue {
-  links = [
-    {
-      name: 'Link 1',
-      description: 'Description.',
-    },
-    {
-      name: 'Link 2',
-      description: 'Another description.',
-    },
-    {
-      name: 'Link 3',
-      description: 'A very very long description that it needs to be wrapped.',
-    },
-  ];
-}
+export default defineComponent({
+  name: 'SearchAndLinks',
+  data: () => ({
+    links: [
+      {
+        name: 'Link 1',
+        description: 'Description.',
+      },
+      {
+        name: 'Link 2',
+        description: 'Another description.',
+      },
+      {
+        name: 'Link 3',
+        description: 'A very very long description that it needs to be wrapped.',
+      },
+    ],
+  }),
+});
 </script>

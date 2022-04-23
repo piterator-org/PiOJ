@@ -10,15 +10,15 @@
 import 'bootstrap';
 import SiteHeader from '@/components/SiteHeader.vue';
 import SiteFooter from '@/components/SiteFooter.vue';
-import { Options, Vue } from 'vue-class-component';
+import { defineComponent } from 'vue';
 
-@Options({
+export default defineComponent({
+  name: 'HomeView',
   components: {
     SiteHeader,
     SiteFooter,
   },
-})
-export default class App extends Vue {}
+});
 </script>
 
 <style lang="scss">

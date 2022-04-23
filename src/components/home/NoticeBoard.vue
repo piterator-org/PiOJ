@@ -12,10 +12,10 @@
           />
         </a>
         <p class="text-center">
-          <span class="fs-5">{{ this.$store.state.user.username }}</span>&nbsp;<span
-            class="badge rounded-mx-pill bg-secondary align-text-bottom"
-            >{{ this.$store.state.user.role }}</span
-          >
+          <span class="fs-5">{{ this.$store.state.user.username }}</span
+          >&nbsp;<span class="badge rounded-mx-pill bg-secondary align-text-bottom">{{
+            this.$store.state.user.role
+          }}</span>
         </p>
         <div class="text-center">
           <a class="btn btn-outline-primary btn-sm" href="#">My blog</a>
@@ -51,16 +51,19 @@
 </style>
 
 <script lang="ts">
-import { Vue } from 'vue-class-component';
+import { defineComponent } from 'vue';
 
-export default class NoticeBoard extends Vue {
-  notice = `
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin lacinia arcu quam, quis vulputate
-    tellus accumsan vel. Morbi gravida arcu vitae ligula congue aliquet. Curabitur accumsan enim
-    nibh, sed venenatis libero scelerisque a. Curabitur ac viverra odio. Pellentesque a porttitor
-    elit, non hendrerit magna. Aenean porttitor, ipsum ac pharetra volutpat, neque ante ultrices
-    dolor, vitae suscipit magna dolor eget libero. Vestibulum ante ipsum primis in faucibus orci
-    luctus et ultrices posuere cubilia curae.
-  `;
-}
+export default defineComponent({
+  name: 'NoticeBoard',
+  data: () => ({
+    notice: `
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin lacinia arcu quam, quis vulputate
+      tellus accumsan vel. Morbi gravida arcu vitae ligula congue aliquet. Curabitur accumsan enim
+      nibh, sed venenatis libero scelerisque a. Curabitur ac viverra odio. Pellentesque a porttitor
+      elit, non hendrerit magna. Aenean porttitor, ipsum ac pharetra volutpat, neque ante ultrices
+      dolor, vitae suscipit magna dolor eget libero. Vestibulum ante ipsum primis in faucibus orci
+      luctus et ultrices posuere cubilia curae.
+    `,
+  }),
+});
 </script>

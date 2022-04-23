@@ -11,17 +11,17 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { defineComponent } from 'vue';
 import NoticeBoard from '@/components/home/NoticeBoard.vue';
 import RecentDynamics from '@/components/home/RecentDynamics.vue';
 import SearchAndLinks from '@/components/home/SearchAndLinks.vue';
 
-@Options({
+export default defineComponent({
+  name: 'HomeView',
   components: {
     NoticeBoard,
     RecentDynamics,
     SearchAndLinks,
   },
-})
-export default class HomeView extends Vue {}
+});
 </script>
