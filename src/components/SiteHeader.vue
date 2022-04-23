@@ -1,7 +1,5 @@
 <template>
-  <nav
-    class="navbar navbar-expand-md navbar-light sticky-top bg-white shadow p-3"
-  >
+  <nav class="navbar navbar-expand-md navbar-light sticky-top bg-white shadow p-3">
     <div class="container">
       <a class="navbar-brand" href="#">PiOJ</a>
       <button
@@ -54,75 +52,46 @@
               >{{ this.$store.state.user.username }}&nbsp;</a
             >
             <div
-              class="
-                dropdown-menu dropdown-menu-end
-                p-4
-                text-muted
-                border-0
-                shadow
-                rounded-mx
-              "
+              class="dropdown-menu dropdown-menu-end p-4 text-muted border-0 shadow rounded-mx"
               aria-labelledby="navbarScrollingDropdown"
               id="user-card"
             >
               <a href="#">
                 <img
                   :src="this.$store.state.user.avatar"
-                  class="
-                    rounded-circle
-                    mx-auto
-                    d-block
-                    border border-1
-                    shadow-sm
-                    mb-2
-                  "
+                  class="rounded-circle mx-auto d-none d-md-block border border-1 shadow-sm mb-2"
                   alt="avatar"
                   width="80"
                   height="80"
                 />
               </a>
-              <p class="text-center">
+              <p class="text-center d-none d-md-block">
                 <span class="fs-5">{{ this.$store.state.user.username }}</span
-                >&nbsp;<span
-                  class="badge rounded-mx-pill bg-secondary align-text-bottom"
-                  >{{ this.$store.state.user.role }}</span
-                >
+                >&nbsp;<span class="badge rounded-mx-pill bg-secondary align-text-bottom">{{
+                  this.$store.state.user.role
+                }}</span>
               </p>
               <ul class="list-group list-group-flush text-center">
                 <li class="list-group-item">
-                  <a class="text-decoration-none link-secondary" href="#"
-                    >Profile</a
-                  >
+                  <a class="text-decoration-none link-secondary" href="#">Profile</a>
                 </li>
                 <li class="list-group-item">
-                  <a class="text-decoration-none link-secondary" href="#"
-                    >Submissions</a
-                  >
+                  <a class="text-decoration-none link-secondary" href="#">Submissions</a>
                 </li>
                 <li class="list-group-item">
-                  <a class="text-decoration-none link-secondary" href="#"
-                    >Activities</a
-                  >
+                  <a class="text-decoration-none link-secondary" href="#">Activities</a>
                 </li>
                 <li class="list-group-item">
-                  <a class="text-decoration-none link-secondary" href="#"
-                    >Teams</a
-                  >
+                  <a class="text-decoration-none link-secondary" href="#">Teams</a>
                 </li>
                 <li class="list-group-item">
-                  <a class="text-decoration-none link-secondary" href="#"
-                    >Blog</a
-                  >
+                  <a class="text-decoration-none link-secondary" href="#">Blog</a>
                 </li>
               </ul>
               <div class="text-center mt-2">
-                <a class="text-decoration-none link-secondary" href="#"
-                  >Switch</a
-                >
+                <a class="text-decoration-none link-secondary" href="#">Switch</a>
                 |
-                <a class="text-decoration-none link-secondary" href="#"
-                  >Logout</a
-                >
+                <a class="text-decoration-none link-secondary" href="#">Logout</a>
               </div>
             </div>
           </li>
