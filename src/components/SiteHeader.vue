@@ -33,16 +33,16 @@
             <a class="nav-link" href="#">Discussions</a>
           </li>
         </ul>
-        <ul class="navbar-nav mb-2 mb-md-0 flex-row flex-wrap">
+        <ul class="navbar-nav mb-2 mb-md-0 d-flex">
           <!-- not acthenticated -->
-          <li class="nav-item">
+          <li class="nav-item" v-if="!this.$store.state.user">
             <a class="nav-link" href="#">Login</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="!this.$store.state.user">
             <a class="nav-link" href="#">Signup</a>
           </li>
           <!-- acthenticated -->
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown" v-if="this.$store.state.user">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -51,9 +51,8 @@
               data-bs-toggle="dropdown"
               data-bs-auto-close="outside"
               aria-expanded="false"
+              >{{ this.$store.state.user.username }}&nbsp;</a
             >
-              wbh07
-            </a>
             <div
               class="
                 dropdown-menu dropdown-menu-end
@@ -68,7 +67,7 @@
             >
               <a href="#">
                 <img
-                  src="https://q1.qlogo.cn/g?b=qq&nk=3415751684&s=640"
+                  :src="this.$store.state.user.avatar"
                   class="
                     rounded-circle
                     mx-auto
@@ -83,9 +82,10 @@
                 />
               </a>
               <p class="text-center">
-                <span class="fs-5">wbh07</span>&nbsp;<span
+                <span class="fs-5">{{ this.$store.state.user.username }}</span
+                >&nbsp;<span
                   class="badge rounded-mx-pill bg-secondary align-text-bottom"
-                  >admin</span
+                  >{{ this.$store.state.user.role }}</span
                 >
               </p>
               <ul class="list-group list-group-flush text-center">

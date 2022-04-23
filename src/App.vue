@@ -7,8 +7,7 @@
 </template>
 
 <script lang="ts">
-// import 'bootstrap/dist/js/bootstrap.bundle.min';
-
+import 'bootstrap';
 import SiteHeader from '@/components/SiteHeader.vue';
 import SiteFooter from '@/components/SiteFooter.vue';
 import { Options, Vue } from 'vue-class-component';
@@ -19,7 +18,7 @@ import { Options, Vue } from 'vue-class-component';
     SiteFooter,
   },
 })
-export default class HomeView extends Vue {}
+export default class App extends Vue {}
 </script>
 
 <style lang="scss">

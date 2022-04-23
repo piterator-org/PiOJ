@@ -4,7 +4,7 @@
       <div class="p-5 bg-white rounded-mx shadow">
         <a href="#">
           <img
-            src="https://q1.qlogo.cn/g?b=qq&amp;nk=3415751684&amp;s=640"
+            :src="this.$store.state.user.avatar"
             class="rounded-circle mx-auto d-block mb-2 border border-1"
             alt="avatar"
             width="100"
@@ -12,9 +12,9 @@
           />
         </a>
         <p class="text-center">
-          <span class="fs-5">wbh07</span>&nbsp;<span
+          <span class="fs-5">{{ this.$store.state.user.username }}</span>&nbsp;<span
             class="badge rounded-mx-pill bg-secondary align-text-bottom"
-            >admin</span
+            >{{ this.$store.state.user.role }}</span
           >
         </p>
         <div class="text-center">
