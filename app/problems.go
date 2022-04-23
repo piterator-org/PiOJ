@@ -10,10 +10,29 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type IOExample [2]string
+
+type ProblemTag string
+
+type TestCase [2]string
+
+type Subtask []TestCase
+
 type Problem struct {
-	ID      int              `json:"id"`
-	Title   LocalizedStrings `json:"title"`
-	Content LocalizedStrings `json:"content"`
+	ID           int              `json:"id"`
+	Title        LocalizedStrings `json:"title"`
+	InputFile    string           `json:"input_file"`
+	OutputFile   string           `json:"output_file"`
+	TimeLimit    int              `json:"time_limit"`
+	MemoryLimit  int              `json:"memory_limit"`
+	Background   LocalizedStrings `json:"background"`
+	Description  LocalizedStrings `json:"description"`
+	InputFormat  LocalizedStrings `json:"input_format"`
+	OutputFormat LocalizedStrings `json:"output_format"`
+	Examples     []IOExample      `json:"examples"`
+	Hints        LocalizedStrings `json:"hints"`
+	Tags         []ProblemTag     `json:"tags"`
+	Subtasks     []Subtask        `json:"subtasks"`
 }
 
 func (app App) HandleProblems() {
@@ -40,6 +59,7 @@ func (app App) HandleProblems() {
 		if _, err := app.Database.Collection("problem").InsertOne(context.TODO(), problem); err != nil {
 			http.Error(w, err.Error(), http.StatusInsufficientStorage)
 		} else {
+			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(problem)
 		}
 	})
@@ -58,6 +78,7 @@ func (app App) HandleProblems() {
 		case mongo.ErrNoDocuments:
 			http.Error(w, err.Error(), http.StatusNotFound)
 		case nil:
+			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(problem)
 		default:
 			http.Error(w, err.Error(), http.StatusInternalServerError)
