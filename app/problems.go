@@ -11,9 +11,9 @@ import (
 )
 
 type Problem struct {
-	ID      int    `json:"id"`
-	Title   string `json:"title"`
-	Content string `json:"content"`
+	ID      int              `json:"id"`
+	Title   LocalizedStrings `json:"title"`
+	Content LocalizedStrings `json:"content"`
 }
 
 func (app App) HandleProblems() {

@@ -101,7 +101,10 @@ func TestProblem(t *testing.T) {
 		for i := 1; i <= n; i++ {
 			if _, err := request(
 				"/api/problem/create",
-				map[string]string{"title": fmt.Sprint("Problem ", i), "content": "Content"},
+				map[string]map[string]string{
+					"title":   {"en": fmt.Sprint("Problem ", i)},
+					"content": {"en": "Content"},
+				},
 				i,
 			); err != nil {
 				t.Error(err.Error())
@@ -121,7 +124,7 @@ func TestProblem(t *testing.T) {
 			if problem, err := request("/api/problem/get", map[string]int{"id": i}, i); err != nil {
 				t.Error(err.Error())
 			} else {
-				if problem.Title != fmt.Sprint("Problem ", i) {
+				if problem.Title["en"] != fmt.Sprint("Problem ", i) {
 					t.Errorf("[%d] Unexpected problem title: %s", i, problem.Title)
 				}
 			}
@@ -138,6 +141,17 @@ func TestProblem(t *testing.T) {
 	t.Run("get 400", func(t *testing.T) {
 		resp := post("/api/problem/get", bytes.NewBufferString("{"))
 		if resp.StatusCode != http.StatusBadRequest {
+			t.Errorf("Unexpected status code: %d", resp.StatusCode)
+		}
+	})
+
+	t.Run("get 500", func(t *testing.T) {
+		database.Collection("problem").InsertOne(
+			context.Background(),
+			map[string]interface{}{"id": n + 1, "title": fmt.Sprint("Problem ", n+1)},
+		)
+		resp := postjson("/api/problem/get", map[string]int{"id": n + 1})
+		if resp.StatusCode != http.StatusInternalServerError {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}
 	})

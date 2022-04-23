@@ -6,6 +6,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+type LocalizedStrings map[string]string
+
 type App struct {
 	ServeMux *http.ServeMux
 	Database *mongo.Database
