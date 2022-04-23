@@ -10,32 +10,37 @@
             placeholder="Search"
             aria-label="Search"
           />
-          <button class="btn btn-outline-success mb-1" type="submit">
-            Search
-          </button>
+          <button class="btn btn-outline-success mb-1" type="submit">Search</button>
         </form>
       </div>
       <h5 class="mb-3">Links</h5>
       <div class="mb-3">
-        <div>
-          <a class="text-decoration-none" href="#">Link 1</a>&nbsp;<span
-            class="text-muted"
-            >Description.</span
-          >
-        </div>
-        <div>
-          <a class="text-decoration-none" href="#">Link 2</a>&nbsp;<span
-            class="text-muted"
-            >Another description.</span
-          >
-        </div>
-        <div>
-          <a class="text-decoration-none" href="#">Link 3</a>&nbsp;<span
-            class="text-muted"
-            >A very very long description that it needs to be wrapped.</span
-          >
+        <div v-for="link in links" :key="link.name">
+          <a class="text-decoration-none" href="#">{{ link.name }}</a
+          >&nbsp;<span class="text-muted">{{ link.description }}</span>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import { Vue } from 'vue-class-component';
+
+export default class RecentDynamics extends Vue {
+  links = [
+    {
+      name: 'Link 1',
+      description: 'Description.',
+    },
+    {
+      name: 'Link 2',
+      description: 'Another description.',
+    },
+    {
+      name: 'Link 3',
+      description: 'A very very long description that it needs to be wrapped.',
+    },
+  ];
+}
+</script>

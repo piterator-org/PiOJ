@@ -24,14 +24,7 @@
     </div>
     <div class="col-md-8 mb-3 d-flex" id="notice-board">
       <div class="p-5 bg-white rounded-mx overflow-auto shadow">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin lacinia
-        arcu quam, quis vulputate tellus accumsan vel. Morbi gravida arcu vitae
-        ligula congue aliquet. Curabitur accumsan enim nibh, sed venenatis
-        libero scelerisque a. Curabitur ac viverra odio. Pellentesque a
-        porttitor elit, non hendrerit magna. Aenean porttitor, ipsum ac pharetra
-        volutpat, neque ante ultrices dolor, vitae suscipit magna dolor eget
-        libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-        posuere cubilia curae.
+        {{ notice }}
       </div>
     </div>
   </div>
@@ -56,3 +49,18 @@
   }
 }
 </style>
+
+<script lang="ts">
+import { Vue } from 'vue-class-component';
+
+export default class NoticeBoard extends Vue {
+  notice = `
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin lacinia arcu quam, quis vulputate
+    tellus accumsan vel. Morbi gravida arcu vitae ligula congue aliquet. Curabitur accumsan enim
+    nibh, sed venenatis libero scelerisque a. Curabitur ac viverra odio. Pellentesque a porttitor
+    elit, non hendrerit magna. Aenean porttitor, ipsum ac pharetra volutpat, neque ante ultrices
+    dolor, vitae suscipit magna dolor eget libero. Vestibulum ante ipsum primis in faucibus orci
+    luctus et ultrices posuere cubilia curae.
+  `;
+}
+</script>
