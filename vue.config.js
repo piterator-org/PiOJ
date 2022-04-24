@@ -14,14 +14,6 @@ module.exports = defineConfig({
       });
   },
 
-  css: {
-    loaderOptions: {
-      sass: {
-        additionalData: '@import "~bootstrap/scss/bootstrap";',
-      },
-    },
-  },
-
   pluginOptions: {
     i18n: {
       // locale: 'en',
