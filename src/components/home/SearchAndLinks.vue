@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-4 col-lg-3 mb-3 d-flex">
+  <div class="col-md-4 col-lg-3 mb-3 d-lg-flex">
     <div class="p-4 bg-white rounded-mx shadow">
       <h5 class="mb-3">Search</h5>
       <div class="mb-3">
