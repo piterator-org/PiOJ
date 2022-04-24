@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-9">
+  <div class="col-md-8 col-lg-9">
     <div class="container-fuild mb-4">
       <div class="p-4 bg-white rounded-mx shadow">
         <h5 class="mb-1">Discussions</h5>
@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6 mb-3 d-flex">
+      <div class="col-lg-6 mb-3 d-flex">
         <div class="p-4 bg-white rounded-mx shadow">
           <h5 class="mb-1">Latest Problems</h5>
           <div class="row">
@@ -75,7 +75,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 mb-3 d-flex">
+      <div class="col-lg-6 mb-3 d-flex">
         <div class="p-4 bg-white rounded-mx shadow">
           <h5 class="mb-1">Recent Contests</h5>
           <div class="row">
@@ -142,8 +142,8 @@
 <style lang="scss" scoped>
 @include media-breakpoint-up(md) {
   .discussion-avatar {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
   }
 }
 

@@ -21,6 +21,7 @@ type Subtask []TestCase
 type Problem struct {
 	ID           int              `json:"id"`
 	Title        LocalizedStrings `json:"title"`
+	Difficulty   int              `json:"difficulty"`
 	InputFile    string           `json:"input_file"`
 	OutputFile   string           `json:"output_file"`
 	TimeLimit    int              `json:"time_limit"`
