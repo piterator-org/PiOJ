@@ -59,7 +59,7 @@
               <a href="#">
                 <img
                   :src="this.$store.state.user.avatar"
-                  class="rounded-circle mx-auto d-none d-md-block border border-1 shadow-sm mb-2"
+                  class="rounded-circle mx-auto d-none d-md-block shadow-sm mb-2"
                   alt="avatar"
                   width="80"
                   height="80"
