@@ -9,14 +9,14 @@
             v-for="discussion in discussions"
             :key="discussion.id"
           >
-            <div class="card">
+            <div class="card border-0 shadow-sm">
               <div class="card-body">
                 <div class="row">
                   <div class="col-3 col-md-3 d-none d-md-block">
                     <a href="#">
                       <img
                         :src="discussion.user.avatar"
-                        class="rounded-circle mx-auto d-block border border-1 discussion-avatar"
+                        class="rounded-circle mx-auto d-block shadow-sm discussion-avatar"
                         alt="avatar"
                       />
                     </a>
@@ -55,7 +55,7 @@
           <h5 class="mb-1">Latest Problems</h5>
           <div class="row">
             <div class="col-12 mt-3" v-for="problem in problems" :key="problem.id">
-              <div class="card">
+              <div class="card border-0 shadow-sm">
                 <div class="card-body">
                   <router-link
                     class="text-decoration-none"
@@ -81,7 +81,7 @@
           <div class="row">
             <div class="col-12 mt-3" v-for="contest in contests" :key="contest.id">
               <div
-                class="card"
+                class="card shadow-sm"
                 :class="
                   contest.status
                     ? contest.status > 0
