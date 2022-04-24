@@ -26,14 +26,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-$card-border-mx: .5em;
+$card-border-mx: 0.5em;
 $card-border-radius: $card-border-mx;
 
 .rounded-mx {
   border-radius: $card-border-mx;
 }
 
-@import "~bootstrap/scss/bootstrap";
+@import '~bootstrap/scss/bootstrap';
 </style>
 
 <style scoped>
