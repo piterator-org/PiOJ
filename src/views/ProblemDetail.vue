@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <section class="mt-4 mb-4">
-      <h2>A+B Problem</h2>
+      <h2>{{ t('title', 'Loading...') }}</h2>
       <p class="fs-5 text-muted">#{{ problem.id }}</p>
     </section>
     <section class="row mb-2">
@@ -46,11 +46,11 @@
           </div>
           <div class="d-flex p-1">
             <strong>Time Limit</strong>
-            <div class="ms-auto">1.0 Second</div>
+            <div class="ms-auto">{{ problem.time_limit }}</div>
           </div>
           <div class="d-flex p-1">
             <strong>Memory Limit</strong>
-            <div class="ms-auto">128 MiB</div>
+            <div class="ms-auto">{{ problem.memory_limit }}</div>
           </div>
           <div class="d-flex p-1">
             <strong>Submitted</strong>
@@ -69,30 +69,21 @@
         </div>
       </div>
       <div class="col-md-7 col-lg-8 col-xl-9 mb-3 order-md-1">
-        <div class="p-4 bg-white rounded-mx shadow mb-3">
+        <div class="p-4 bg-white rounded-mx shadow mb-3" v-if="t('background', ' ').trim()">
           <h5 class="mb-3">Background</h5>
-          Under the requirement of most OI contests, it's not allowed to output any extra things
-          including "Please input integer A and B" which are messages to lead user to input data.
-          <br />
-          If your output contain these things, your program will be judged as a
-          <code>Wrong Answer</code>, which will be shown as <code>WA</code>. <br />
-          Before comparing your output to the standard output, PiOJ will ignore the spaces at the
-          end of each lines and the linefeed at the last line in the output. <br />
-          Thus, if it is happend to be that it seemed to be AC on your computer but WA on PiOJ,
-          please DO NOT consider it as a mistake of PiOJ, it will probably be some extra data in you
-          output.
+          {{ t('background') }}
         </div>
-        <div class="p-4 bg-white rounded-mx shadow mb-3">
+        <div class="p-4 bg-white rounded-mx shadow mb-3" v-if="t('description', ' ').trim()">
           <h5 class="mb-3">Description</h5>
-          Blah blah blah.
+          {{ t('description') }}
         </div>
-        <div class="p-4 bg-white rounded-mx shadow mb-3">
+        <div class="p-4 bg-white rounded-mx shadow mb-3" v-if="t('input_format', ' ').trim()">
           <h5 class="mb-3">Input</h5>
-          Blah blah blah.
+          {{ t('input_format') }}
         </div>
-        <div class="p-4 bg-white rounded-mx shadow mb-3">
+        <div class="p-4 bg-white rounded-mx shadow mb-3" v-if="t('output_format', ' ').trim()">
           <h5 class="mb-3">Output</h5>
-          Blah blah blah.
+          {{ t('output_format') }}
         </div>
         <div class="row" v-for="(example, index) in problem.examples" :key="example[0]">
           <div class="col-md-6">
@@ -118,9 +109,9 @@
             </div>
           </div>
         </div>
-        <div class="p-4 bg-white rounded-mx shadow mb-3">
+        <div class="p-4 bg-white rounded-mx shadow mb-3" v-if="t('hints', ' ').trim()">
           <h5 class="mb-3">Hints</h5>
-          Blah blah blah.
+          {{ t('hints') }}
         </div>
       </div>
     </section>
@@ -129,17 +120,61 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'ProblemDetail',
   data: () => ({ problem: {} }),
-  mounted() {
-    axios
-      .post('/api/problem/get', { id: parseInt(this.$route.params.id as string, 10) })
-      .then((res) => {
-        this.problem = res.data;
+  setup() {
+    return useI18n({
+      useScope: 'local',
+    });
+  },
+  created() {
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        if (this.$route.name === 'problem_detail') {
+          this.fetchData(this.$route.params.id as string);
+        }
+      },
+      { immediate: true },
+    );
+  },
+  methods: {
+    fetchData(pid: string) {
+      this.problem = {};
+      this.availableLocales.forEach((locale) => {
+        this.setLocaleMessage(locale, {});
       });
+      axios
+        .post('/api/problem/get', { id: parseInt(pid, 10) })
+        .then((response) => {
+          this.problem = response.data;
+          const locales: { [key: string]: { [key: string]: string } } = {};
+          ['title', 'background', 'description', 'input_format', 'output_format', 'hints']
+            .filter((key) => response.data[key])
+            .forEach((key) => {
+              Object.keys(response.data[key]).forEach((lang) => {
+                locales[lang] = locales[lang] || {};
+                locales[lang][key] = response.data[key][lang];
+              });
+            });
+          Object.entries(locales).forEach(([locale, message]) => {
+            this.setLocaleMessage(locale, message);
+          });
+        })
+        .catch((err) => {
+          const { response }: { response: AxiosResponse } = err;
+          const { fullPath } = this.$route;
+          if (response.status === 404) {
+            this.$router
+              .replace({ name: '404', params: { pathMatch: '404' } })
+              .then(() => window.history.replaceState({}, '', fullPath));
+          }
+        });
+    },
   },
 });
 </script>

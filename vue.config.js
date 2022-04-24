@@ -20,7 +20,7 @@ module.exports = defineConfig({
       // fallbackLocale: 'en',
       localeDir: 'locales',
       enableLegacy: false,
-      runtimeOnly: true,
+      runtimeOnly: false,
       compositionOnly: false,
       fullInstall: true,
     },
