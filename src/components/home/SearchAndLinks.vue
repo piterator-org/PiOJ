@@ -16,8 +16,8 @@
       <h5 class="mb-3">Links</h5>
       <div class="mb-3">
         <div v-for="link in links" :key="link.name">
-          <a class="text-decoration-none" href="#">{{ link.name }}</a
-          >&nbsp;<span class="text-muted">{{ link.description }}</span>
+          <a class="text-decoration-none" href="#">{{ link.name }}</a>
+          <span class="text-muted">{{ link.description }}</span>
         </div>
       </div>
     </div>

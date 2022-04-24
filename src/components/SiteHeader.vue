@@ -49,7 +49,7 @@
               data-bs-toggle="dropdown"
               data-bs-auto-close="outside"
               aria-expanded="false"
-              >{{ this.$store.state.user.username }}&nbsp;</a
+              >{{ this.$store.state.user.username }}</a
             >
             <div
               class="dropdown-menu dropdown-menu-end p-4 text-muted border-0 shadow rounded-mx"
@@ -66,8 +66,8 @@
                 />
               </a>
               <p class="text-center d-none d-md-block">
-                <span class="fs-5">{{ this.$store.state.user.username }}</span
-                >&nbsp;<span class="badge rounded-mx-pill bg-secondary align-text-bottom">{{
+                <span class="fs-5">{{ this.$store.state.user.username }}</span>
+                <span class="badge rounded-mx-pill bg-secondary align-text-bottom">{{
                   this.$store.state.user.role
                 }}</span>
               </p>

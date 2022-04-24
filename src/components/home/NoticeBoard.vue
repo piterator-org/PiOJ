@@ -12,8 +12,8 @@
           />
         </a>
         <p class="text-center">
-          <span class="fs-5">{{ this.$store.state.user.username }}</span
-          >&nbsp;<span class="badge rounded-mx-pill bg-secondary align-text-bottom">{{
+          <span class="fs-5">{{ this.$store.state.user.username }}</span>
+          <span class="badge rounded-mx-pill bg-secondary align-text-bottom">{{
             this.$store.state.user.role
           }}</span>
         </p>
