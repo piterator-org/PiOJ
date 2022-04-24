@@ -1,7 +1,14 @@
 <template>
   <nav class="navbar navbar-expand-md navbar-light sticky-top bg-white shadow p-3">
     <div class="container">
-      <a class="navbar-brand" href="#">PiOJ</a>
+      <a class="navbar-brand" href="#">
+        <img
+          src="@/assets/pioj.svg"
+          alt="PiOJ"
+          class="d-inline-block align-text-top"
+          style="height: 1.25em"
+        />
+      </a>
       <button
         class="navbar-toggler"
         type="button"
