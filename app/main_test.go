@@ -11,7 +11,6 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
-	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -53,20 +52,18 @@ func TestFileServer(t *testing.T) {
 	})
 }
 
-func TestProblem(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	defer cancel()
-	client, err := mongo.Connect(ctx, options.Client())
+func connectDatabase() *mongo.Database {
+	client, err := mongo.Connect(context.Background(), options.Client())
 	if err != nil {
 		panic(err)
 	}
-	defer func() {
-		if err = client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
 	database := client.Database("test")
-	database.Drop(ctx)
+	return database
+}
+
+func TestProblem(t *testing.T) {
+	database := connectDatabase()
+	database.Collection("problems").Drop(context.Background())
 	mux := NewApp(database).ServeMux
 
 	post := func(path string, body io.Reader) *http.Response {
@@ -146,13 +143,43 @@ func TestProblem(t *testing.T) {
 	})
 
 	t.Run("get 500", func(t *testing.T) {
-		database.Collection("problem").InsertOne(
+		database.Collection("problems").InsertOne(
 			context.Background(),
 			map[string]interface{}{"id": n + 1, "title": fmt.Sprint("Problem ", n+1)},
 		)
 		resp := postjson("/api/problem/get", map[string]int{"id": n + 1})
 		if resp.StatusCode != http.StatusInternalServerError {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
+		}
+	})
+
+	database.Client().Disconnect(context.Background())
+
+	t.Run("create 500", func(t *testing.T) {
+		resp := postjson("/api/problem/create", map[string]int{"id": n + 1})
+		if resp.StatusCode != http.StatusInternalServerError {
+			t.Errorf("Unexpected status code: %d", resp.StatusCode)
+		}
+	})
+}
+
+func TestUsers(t *testing.T) {
+	collection := connectDatabase().Collection("users")
+	collection.Drop(context.Background())
+
+	t.Run("create", func(t *testing.T) {
+		user := User{Username: "username"}
+		if _, err := user.Save(collection); err != nil {
+			t.Error(err.Error())
+		}
+		if err := user.SetPassword("password"); err != nil {
+			t.Fatal(err.Error())
+		}
+		if !user.CheckPassword("password") {
+			t.Error("Password should be valid")
+		}
+		if user.CheckPassword("pwd") {
+			t.Error("Password should be invalid")
 		}
 	})
 }

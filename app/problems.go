@@ -22,14 +22,14 @@ type Problem struct {
 	ID           int              `json:"id"`
 	Title        LocalizedStrings `json:"title"`
 	Difficulty   int              `json:"difficulty"`
-	InputFile    string           `json:"input_file"`
-	OutputFile   string           `json:"output_file"`
-	TimeLimit    int              `json:"time_limit"`
-	MemoryLimit  int              `json:"memory_limit"`
+	InputFile    string           `json:"input_file"    bson:"inputFile"`
+	OutputFile   string           `json:"output_file"   bson:"outputFile"`
+	TimeLimit    int              `json:"time_limit"    bson:"timeLimit"`
+	MemoryLimit  int              `json:"memory_limit"  bson:"memoryLimit"`
 	Background   LocalizedStrings `json:"background"`
 	Description  LocalizedStrings `json:"description"`
-	InputFormat  LocalizedStrings `json:"input_format"`
-	OutputFormat LocalizedStrings `json:"output_format"`
+	InputFormat  LocalizedStrings `json:"input_format"  bson:"inputFormat"`
+	OutputFormat LocalizedStrings `json:"output_format" bson:"outputFormat"`
 	Examples     []IOExample      `json:"examples"`
 	Hints        LocalizedStrings `json:"hints"`
 	Tags         []ProblemTag     `json:"tags"`
@@ -45,7 +45,7 @@ func (app App) HandleProblems() {
 		}
 
 		var last Problem
-		switch err := app.Database.Collection("problem").FindOne(
+		switch err := app.Database.Collection("problems").FindOne(
 			context.TODO(), bson.D{}, options.FindOne().SetSort(map[string]int{"id": -1}),
 		).Decode(&last); err {
 		case mongo.ErrNoDocuments:
@@ -57,7 +57,7 @@ func (app App) HandleProblems() {
 			return
 		}
 
-		if _, err := app.Database.Collection("problem").InsertOne(context.TODO(), problem); err != nil {
+		if _, err := app.Database.Collection("problems").InsertOne(context.TODO(), problem); err != nil {
 			http.Error(w, err.Error(), http.StatusInsufficientStorage)
 		} else {
 			w.Header().Set("Content-Type", "application/json")
@@ -73,7 +73,7 @@ func (app App) HandleProblems() {
 		}
 
 		var problem Problem
-		switch err := app.Database.Collection("problem").FindOne(
+		switch err := app.Database.Collection("problems").FindOne(
 			context.TODO(), bson.D{{Key: "id", Value: body.ID}},
 		).Decode(&problem); err {
 		case mongo.ErrNoDocuments:
