@@ -26,11 +26,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-$card-border-mx: 0.5em;
-$card-border-radius: $card-border-mx;
+$border-radius-mx: .5em;
+$border-radius: .35em;
+$card-border-radius: $border-radius-mx;
+$dropdown-border-radius: $border-radius-mx;
 
 .rounded-mx {
-  border-radius: $card-border-mx;
+  border-radius: $border-radius-mx;
 }
 
 @import '~bootstrap/scss/bootstrap';
@@ -38,7 +40,7 @@ $card-border-radius: $card-border-mx;
 
 <style scoped>
 .fade-in-enter-active {
-  transition: opacity 0.5s ease;
+  transition: opacity .5s ease;
 }
 
 .fade-in-enter-from {

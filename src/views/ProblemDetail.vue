@@ -27,7 +27,7 @@
             <strong>Provider</strong>
             <a class="ms-auto text-decoration-none" href="#">
               wbh07
-              <span class="badge rounded-pill bg-primary align-text-bottom">admin</span>
+              <span class="badge bg-primary align-text-bottom">admin</span>
             </a>
           </div>
           <div class="d-flex p-1">
@@ -93,7 +93,7 @@
                 <button class="position-absolute top-0 end-0 btn btn-link btn-sm rounded-mx">
                   Copy
                 </button>
-                <div class="user-select-all">{{ example[0] }}</div>
+                <pre class="user-select-all mb-0">{{ example[0] }}</pre>
               </div>
             </div>
           </div>
@@ -104,7 +104,7 @@
                 <button class="position-absolute top-0 end-0 btn btn-link btn-sm rounded-mx">
                   Copy
                 </button>
-                <pre class="user-select-all">{{ example[1] }}</pre>
+                <pre class="user-select-all mb-0">{{ example[1] }}</pre>
               </div>
             </div>
           </div>
