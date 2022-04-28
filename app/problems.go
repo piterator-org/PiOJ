@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -19,21 +20,22 @@ type TestCase [2]string
 type Subtask []TestCase
 
 type Problem struct {
-	ID           int              `json:"id"`
-	Title        LocalizedStrings `json:"title"`
-	Difficulty   int              `json:"difficulty"`
-	InputFile    string           `json:"input_file"    bson:"inputFile"`
-	OutputFile   string           `json:"output_file"   bson:"outputFile"`
-	TimeLimit    int              `json:"time_limit"    bson:"timeLimit"`
-	MemoryLimit  int              `json:"memory_limit"  bson:"memoryLimit"`
-	Background   LocalizedStrings `json:"background"`
-	Description  LocalizedStrings `json:"description"`
-	InputFormat  LocalizedStrings `json:"input_format"  bson:"inputFormat"`
-	OutputFormat LocalizedStrings `json:"output_format" bson:"outputFormat"`
-	Examples     []IOExample      `json:"examples"`
-	Hints        LocalizedStrings `json:"hints"`
-	Tags         []ProblemTag     `json:"tags"`
-	Subtasks     []Subtask        `json:"subtasks"`
+	ObjectId     primitive.ObjectID `json:"_id"           bson:"_id"`
+	ID           int                `json:"id"`
+	Title        LocalizedStrings   `json:"title"`
+	Difficulty   int                `json:"difficulty"`
+	InputFile    string             `json:"input_file"    bson:"inputFile"`
+	OutputFile   string             `json:"output_file"   bson:"outputFile"`
+	TimeLimit    int                `json:"time_limit"    bson:"timeLimit"`
+	MemoryLimit  int                `json:"memory_limit"  bson:"memoryLimit"`
+	Background   LocalizedStrings   `json:"background"`
+	Description  LocalizedStrings   `json:"description"`
+	InputFormat  LocalizedStrings   `json:"input_format"  bson:"inputFormat"`
+	OutputFormat LocalizedStrings   `json:"output_format" bson:"outputFormat"`
+	Examples     []IOExample        `json:"examples"`
+	Hints        LocalizedStrings   `json:"hints"`
+	Tags         []ProblemTag       `json:"tags"`
+	Subtasks     []Subtask          `json:"subtasks"`
 }
 
 func (app App) HandleProblems() {
