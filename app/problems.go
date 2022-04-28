@@ -58,6 +58,7 @@ func (app App) HandleProblems() {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		problem.ObjectId = primitive.NewObjectID()
 
 		if _, err := app.Database.Collection("problems").InsertOne(context.TODO(), problem); err != nil {
 			http.Error(w, err.Error(), http.StatusInsufficientStorage)
