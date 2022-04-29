@@ -32,9 +32,14 @@ func (user *User) CheckPassword(password string) bool {
 	) == nil
 }
 
-func (user *User) Save(collection *mongo.Collection) (*mongo.InsertOneResult, error) {
-	return collection.InsertOne(
-		context.TODO(),
-		user,
-	)
+func (user *User) Save(collection *mongo.Collection) (any, error) {
+	if user.ObjectId == primitive.NilObjectID {
+		user.ObjectId = primitive.NewObjectID()
+		return collection.InsertOne(
+			context.TODO(),
+			user,
+		)
+	} else {
+		return collection.ReplaceOne(context.TODO(), map[string]any{"_id": user.ObjectId}, user)
+	}
 }

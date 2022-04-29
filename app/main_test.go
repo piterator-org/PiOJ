@@ -175,6 +175,9 @@ func TestUsers(t *testing.T) {
 		if err := user.SetPassword("password"); err != nil {
 			t.Fatal(err.Error())
 		}
+		if _, err := user.Save(collection); err != nil {
+			t.Error(err.Error())
+		}
 		if !user.CheckPassword("password") {
 			t.Error("Password should be valid")
 		}
