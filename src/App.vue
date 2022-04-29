@@ -11,7 +11,6 @@
 </template>
 
 <script lang="ts">
-import 'bootstrap';
 import SiteHeader from '@/components/SiteHeader.vue';
 import SiteFooter from '@/components/SiteFooter.vue';
 import { defineComponent } from 'vue';
