@@ -1,9 +1,12 @@
 package pioj
 
 import (
+	"context"
 	"net/http"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type LocalizedStrings map[string]string
@@ -13,6 +16,16 @@ type App struct {
 	Database *mongo.Database
 	Root     string
 	Fallback string
+}
+
+func SetUnique(ctx context.Context, collection *mongo.Collection, field string) (string, error) {
+	return collection.Indexes().CreateOne(
+		ctx,
+		mongo.IndexModel{
+			Keys:    bson.D{{Key: field, Value: 1}},
+			Options: options.Index().SetUnique(true),
+		},
+	)
 }
 
 type NotFoundFallbackRespWr struct {

@@ -166,16 +166,17 @@ func TestProblem(t *testing.T) {
 func TestUsers(t *testing.T) {
 	collection := connectDatabase().Collection("users")
 	collection.Drop(context.Background())
+	ctx := context.Background()
 
-	t.Run("create", func(t *testing.T) {
+	t.Run("SetPassword and Save", func(t *testing.T) {
 		user := User{Username: "username"}
-		if _, err := user.Save(collection); err != nil {
+		if _, err := user.Save(ctx, collection); err != nil {
 			t.Error(err.Error())
 		}
 		if err := user.SetPassword("password"); err != nil {
 			t.Fatal(err.Error())
 		}
-		if _, err := user.Save(collection); err != nil {
+		if _, err := user.Save(ctx, collection); err != nil {
 			t.Error(err.Error())
 		}
 		if !user.CheckPassword("password") {
@@ -183,6 +184,21 @@ func TestUsers(t *testing.T) {
 		}
 		if user.CheckPassword("pwd") {
 			t.Error("Password should be invalid")
+		}
+	})
+
+	t.Run("Unique", func(t *testing.T) {
+		user := User{Username: "username"}
+		if res, err := user.Create(ctx, collection); !mongo.IsDuplicateKeyError(err) {
+			t.Error(res)
+		}
+		user.SetPassword("pwd")
+		if _, err := user.Update(ctx, collection); err != nil {
+			t.Error(err.Error())
+		}
+		user = User{Username: "another_username"}
+		if _, err := user.Create(ctx, collection); err != nil {
+			t.Error(err.Error())
 		}
 	})
 }
