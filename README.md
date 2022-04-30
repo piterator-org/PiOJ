@@ -3,7 +3,8 @@
 [![Go](https://github.com/piterator-org/pioj/actions/workflows/go.yml/badge.svg)](https://github.com/piterator-org/pioj/actions/workflows/go.yml)
 [![Node.js CI](https://github.com/piterator-org/pioj/actions/workflows/node.js.yml/badge.svg)](https://github.com/piterator-org/pioj/actions/workflows/node.js.yml)
 [![codecov](https://codecov.io/gh/piterator-org/pioj/graph/badge.svg)](https://codecov.io/gh/piterator-org/pioj)
-[![GitHub](https://img.shields.io/github/license/piterator-org/pioj)](./LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/piterator-org/pioj)](https://goreportcard.com/report/github.com/piterator-org/pioj)
+[![license](https://img.shields.io/github/license/piterator-org/pioj)](./LICENSE)
 
 Piterator Online Judge
 
