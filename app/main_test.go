@@ -12,6 +12,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/go-redis/redis/v8"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -61,24 +62,24 @@ func connectDatabase() *mongo.Database {
 	return database
 }
 
+func request(mux *http.ServeMux, method string, path string, body io.Reader) *http.Response {
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, httptest.NewRequest(method, path, body))
+	return w.Result()
+}
+
+func postjson(mux *http.ServeMux, path string, data any) *http.Response {
+	body, _ := json.Marshal(data)
+	return request(mux, http.MethodPost, path, bytes.NewBuffer(body))
+}
+
 func TestProblem(t *testing.T) {
 	database := connectDatabase()
 	database.Collection("problems").Drop(context.Background())
-	mux := NewApp(database).ServeMux
+	mux := NewApp(Configuration{}, database, nil).ServeMux
 
-	post := func(path string, body io.Reader) *http.Response {
-		w := httptest.NewRecorder()
-		mux.ServeHTTP(w, httptest.NewRequest(http.MethodPost, path, body))
-		return w.Result()
-	}
-
-	postjson := func(path string, data any) *http.Response {
-		body, _ := json.Marshal(data)
-		return post(path, bytes.NewBuffer(body))
-	}
-
-	request := func(path string, data any, i int) (Problem, error) {
-		resp := postjson(path, data)
+	request_problem := func(path string, data any, i int) (Problem, error) {
+		resp := postjson(mux, path, data)
 		if resp.StatusCode != http.StatusOK {
 			return Problem{}, fmt.Errorf("[%d] Unexpected status code at %s: %d", i, path, resp.StatusCode)
 		}
@@ -96,7 +97,7 @@ func TestProblem(t *testing.T) {
 
 	t.Run("create", func(t *testing.T) {
 		for i := 1; i <= n; i++ {
-			if _, err := request(
+			if _, err := request_problem(
 				"/api/problem/create",
 				map[string]map[string]string{
 					"title":   {"en": fmt.Sprint("Problem ", i)},
@@ -110,7 +111,7 @@ func TestProblem(t *testing.T) {
 	})
 
 	t.Run("create 400", func(t *testing.T) {
-		resp := post("/api/problem/create", bytes.NewBufferString("{"))
+		resp := request(mux, http.MethodPost, "/api/problem/create", bytes.NewBufferString("{"))
 		if resp.StatusCode != http.StatusBadRequest {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}
@@ -118,7 +119,7 @@ func TestProblem(t *testing.T) {
 
 	t.Run("get", func(t *testing.T) {
 		for i := 1; i <= n; i++ {
-			if problem, err := request("/api/problem/get", map[string]int{"id": i}, i); err != nil {
+			if problem, err := request_problem("/api/problem/get", map[string]int{"id": i}, i); err != nil {
 				t.Error(err.Error())
 			} else {
 				if problem.Title["en"] != fmt.Sprint("Problem ", i) {
@@ -129,14 +130,14 @@ func TestProblem(t *testing.T) {
 	})
 
 	t.Run("get 404", func(t *testing.T) {
-		resp := postjson("/api/problem/get", map[string]int{"id": n + 1})
+		resp := postjson(mux, "/api/problem/get", map[string]int{"id": n + 1})
 		if resp.StatusCode != http.StatusNotFound {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}
 	})
 
 	t.Run("get 400", func(t *testing.T) {
-		resp := post("/api/problem/get", bytes.NewBufferString("{"))
+		resp := request(mux, http.MethodPost, "/api/problem/get", bytes.NewBufferString("{"))
 		if resp.StatusCode != http.StatusBadRequest {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}
@@ -147,7 +148,7 @@ func TestProblem(t *testing.T) {
 			context.Background(),
 			map[string]interface{}{"id": n + 1, "title": fmt.Sprint("Problem ", n+1)},
 		)
-		resp := postjson("/api/problem/get", map[string]int{"id": n + 1})
+		resp := postjson(mux, "/api/problem/get", map[string]int{"id": n + 1})
 		if resp.StatusCode != http.StatusInternalServerError {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}
@@ -156,7 +157,7 @@ func TestProblem(t *testing.T) {
 	database.Client().Disconnect(context.Background())
 
 	t.Run("create 500", func(t *testing.T) {
-		resp := postjson("/api/problem/create", map[string]int{"id": n + 1})
+		resp := postjson(mux, "/api/problem/create", map[string]int{"id": n + 1})
 		if resp.StatusCode != http.StatusInternalServerError {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}
@@ -164,9 +165,13 @@ func TestProblem(t *testing.T) {
 }
 
 func TestUsers(t *testing.T) {
-	collection := connectDatabase().Collection("users")
+	database := connectDatabase()
+	collection := database.Collection("users")
 	collection.Drop(context.Background())
 	ctx := context.Background()
+	rdb := redis.NewClient(&redis.Options{DB: 1})
+	rdb.FlushDB(context.Background())
+	mux := NewApp(Configuration{}, database, rdb).ServeMux
 
 	t.Run("SetPassword and Save", func(t *testing.T) {
 		user := User{Username: "username"}
@@ -200,5 +205,46 @@ func TestUsers(t *testing.T) {
 		if _, err := user.Create(ctx, collection); err != nil {
 			t.Error(err.Error())
 		}
+	})
+
+	t.Run("Create", func(t *testing.T) {
+		request_verification := func(email string) (code string) {
+			resp := request(mux, http.MethodGet, "/api/user/email?email="+email, nil)
+			if resp.StatusCode != http.StatusOK {
+				t.Errorf("Unexpected status code: %d", resp.StatusCode)
+			}
+			code, err := rdb.Get(context.Background(), "pioj:verification:").Result()
+			if err != nil {
+				t.Error(err.Error())
+			}
+			return
+		}
+		request_create := func(user UserWithPasswordAndVerification, status int) (resp *http.Response) {
+			resp = postjson(mux, "/api/user/create", user)
+			if resp.StatusCode != status {
+				t.Errorf("Unexpected status code: %d", resp.StatusCode)
+			}
+			return
+		}
+		user := UserWithPasswordAndVerification{User: User{Username: ""}}
+		resp := request(mux, http.MethodGet, "/api/user/create", bytes.NewBufferString("{"))
+		if resp.StatusCode != http.StatusBadRequest {
+			t.Errorf("Unexpected status code: %d", resp.StatusCode)
+		}
+		request_create(user, http.StatusUnauthorized)
+		request_verification("")
+		request_create(user, http.StatusUnauthorized)
+		user.Verification = request_verification("")
+		request_create(user, http.StatusOK)
+		resp = request(mux, http.MethodGet, "/api/user/email?email=@", nil)
+		if resp.StatusCode != http.StatusInternalServerError {
+			t.Errorf("Unexpected status code: %d", resp.StatusCode)
+		}
+		rdb.Close()
+		resp = request(mux, http.MethodGet, "/api/user/email", nil)
+		if resp.StatusCode != http.StatusInsufficientStorage {
+			t.Errorf("Unexpected status code: %d", resp.StatusCode)
+		}
+		request_create(user, http.StatusInsufficientStorage)
 	})
 }

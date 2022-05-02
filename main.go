@@ -3,8 +3,11 @@ package main
 import (
 	"context"
 	"net/http"
+	"os"
 	"time"
 
+	"github.com/BurntSushi/toml"
+	"github.com/go-redis/redis/v8"
 	pioj "github.com/piterator-org/pioj/app"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -24,5 +27,19 @@ func main() {
 	}()
 	database := client.Database("pioj")
 
-	http.ListenAndServe(":8080", pioj.NewApp(database).ServeMux)
+	var config pioj.Configuration
+
+	if len(os.Args) > 1 {
+		if _, err := toml.DecodeFile(os.Args[1], &config); err != nil {
+			panic(err)
+		}
+	}
+
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+
+	http.ListenAndServe(":8080", pioj.NewApp(config, database, rdb).ServeMux)
 }
