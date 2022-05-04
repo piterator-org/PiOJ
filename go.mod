@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/BurntSushi/toml v1.1.0
 	github.com/go-redis/redis/v8 v8.11.5
-	go.mongodb.org/mongo-driver v1.9.0
+	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f
 )
 
