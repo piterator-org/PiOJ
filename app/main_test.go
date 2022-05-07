@@ -240,11 +240,36 @@ func TestUsers(t *testing.T) {
 		if resp.StatusCode != http.StatusInternalServerError {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}
+		user.Verification = request_verification("")
+		database.Client().Disconnect(context.Background())
+		request_create(user, http.StatusInsufficientStorage)
 		rdb.Close()
 		resp = request(mux, http.MethodGet, "/api/user/email", nil)
 		if resp.StatusCode != http.StatusInsufficientStorage {
 			t.Errorf("Unexpected status code: %d", resp.StatusCode)
 		}
 		request_create(user, http.StatusInsufficientStorage)
+	})
+
+	database = connectDatabase()
+	mux = NewApp(Configuration{}, database, rdb).ServeMux
+	t.Run("Login", func(t *testing.T) {
+		resp := request(mux, http.MethodPost, "/api/user/login", bytes.NewBufferString(""))
+		if resp.StatusCode != http.StatusBadRequest {
+			t.Errorf("Unexpected status code: %d", resp.StatusCode)
+		}
+		resp = postjson(mux, "/api/user/login", UsernameAndPassword{Username: "username", Password: "password"})
+		if resp.StatusCode != http.StatusOK {
+			t.Errorf("Unexpected status code: %d", resp.StatusCode)
+		}
+		resp = postjson(mux, "/api/user/login", UsernameAndPassword{Username: "username", Password: "pwd"})
+		if resp.StatusCode != http.StatusUnauthorized {
+			t.Errorf("Unexpected status code: %d", resp.StatusCode)
+		}
+		database.Client().Disconnect(context.Background())
+		resp = postjson(mux, "/api/user/login", UsernameAndPassword{Username: "username", Password: "password"})
+		if resp.StatusCode != http.StatusInsufficientStorage {
+			t.Errorf("Unexpected status code: %d", resp.StatusCode)
+		}
 	})
 }

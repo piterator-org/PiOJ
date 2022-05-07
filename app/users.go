@@ -3,6 +3,7 @@ package pioj
 import (
 	"context"
 	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"net/http"
 	"time"
@@ -26,15 +27,19 @@ type UserWithPasswordAndVerification struct {
 	Verification string `json:"verification"`
 }
 
-func (user *User) SetPassword(password string) error {
-	hash, err := bcrypt.GenerateFromPassword(
+type UsernameAndPassword struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func (user *User) SetPassword(password string) (err error) {
+	if hash, err := bcrypt.GenerateFromPassword(
 		[]byte(password),
 		bcrypt.DefaultCost,
-	)
-	if err == nil {
+	); err == nil {
 		user.Password = hash
 	}
-	return err
+	return
 }
 
 func (user *User) CheckPassword(password string) bool {
@@ -42,6 +47,11 @@ func (user *User) CheckPassword(password string) bool {
 		user.Password,
 		[]byte(password),
 	) == nil
+}
+
+func (User) Get(ctx context.Context, collection *mongo.Collection, filter any) (user User, err error) {
+	err = collection.FindOne(ctx, filter).Decode(&user)
+	return
 }
 
 func (user *User) Create(ctx context.Context, collection *mongo.Collection) (*mongo.InsertOneResult, error) {
@@ -75,8 +85,7 @@ func (app App) HandleUsers() {
 			return
 		}
 
-		res, err := app.Redis.GetDel(context.TODO(), "pioj:verification:"+user.Email).Result()
-		if err == redis.Nil {
+		if res, err := app.Redis.GetDel(context.TODO(), "pioj:verification:"+user.Email).Result(); err == redis.Nil {
 			http.Error(w, "Verification code expired or not sent", http.StatusUnauthorized)
 			return
 		} else if err != nil {
@@ -92,7 +101,7 @@ func (app App) HandleUsers() {
 			return
 		}
 		if _, err := user.User.Create(context.TODO(), app.Database.Collection("users")); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusInsufficientStorage)
 			return
 		}
 
@@ -121,5 +130,28 @@ func (app App) HandleUsers() {
 				return
 			}
 		}
+	})
+
+	app.ServeMux.HandleFunc("/api/user/login", func(w http.ResponseWriter, r *http.Request) {
+		var form UsernameAndPassword
+		if err := json.NewDecoder(r.Body).Decode(&form); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		if user, err := User.Get(
+			User{}, context.TODO(), app.Database.Collection("users"), map[string]string{"username": form.Username},
+		); err != nil {
+			http.Error(w, err.Error(), http.StatusInsufficientStorage)
+			return
+		} else if !user.CheckPassword(form.Password) {
+			http.Error(w, "Incorrect password", http.StatusUnauthorized)
+			return
+		}
+		token := make([]byte, 16)
+		if _, err := rand.Read(token); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Write([]byte(hex.EncodeToString(token)))
 	})
 }
