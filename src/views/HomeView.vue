@@ -11,13 +11,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import NoticeBoard from '@/components/home/NoticeBoard.vue';
-import RecentDynamics from '@/components/home/RecentDynamics.vue';
-import SearchAndLinks from '@/components/home/SearchAndLinks.vue';
+import { defineComponent } from "vue";
+import NoticeBoard from "@/components/home/NoticeBoard.vue";
+import RecentDynamics from "@/components/home/RecentDynamics.vue";
+import SearchAndLinks from "@/components/home/SearchAndLinks.vue";
 
 export default defineComponent({
-  name: 'HomeView',
+  name: "HomeView",
   components: {
     NoticeBoard,
     RecentDynamics,

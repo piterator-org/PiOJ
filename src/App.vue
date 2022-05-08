@@ -11,12 +11,12 @@
 </template>
 
 <script lang="ts">
-import SiteHeader from '@/components/SiteHeader.vue';
-import SiteFooter from '@/components/SiteFooter.vue';
-import { defineComponent } from 'vue';
+import SiteHeader from "@/components/SiteHeader.vue";
+import SiteFooter from "@/components/SiteFooter.vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'HomeView',
+  name: "HomeView",
   components: {
     SiteHeader,
     SiteFooter,
@@ -25,8 +25,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-$border-radius-mx: .5em;
-$border-radius: .35em;
+$border-radius-mx: 0.5em;
+$border-radius: 0.35em;
 $card-border-radius: $border-radius-mx;
 $dropdown-border-radius: $border-radius-mx;
 
@@ -34,12 +34,12 @@ $dropdown-border-radius: $border-radius-mx;
   border-radius: $border-radius-mx;
 }
 
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
 </style>
 
 <style scoped>
 .fade-in-enter-active {
-  transition: opacity .5s ease;
+  transition: opacity 0.5s ease;
 }
 
 .fade-in-enter-from {

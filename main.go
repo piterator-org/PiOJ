@@ -49,5 +49,7 @@ func main() {
 
 	rdb := redis.NewClient(config.Database.Redis)
 
-	http.ListenAndServe(":8080", pioj.NewApp(config.Configuration, database, rdb).ServeMux)
+	if err := http.ListenAndServe(":8080", pioj.NewApp(config.Configuration, database, rdb).ServeMux); err != nil {
+		panic(err)
+	}
 }

@@ -10,7 +10,9 @@
             placeholder="Search"
             aria-label="Search"
           />
-          <button class="btn btn-outline-success mb-1" type="submit">Search</button>
+          <button class="btn btn-outline-success mb-1" type="submit">
+            Search
+          </button>
         </form>
       </div>
       <h5 class="mb-3">Links</h5>
@@ -24,24 +26,25 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
+<script lang="ts">
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'SearchAndLinks',
+  name: "SearchAndLinks",
   data: () => ({
     links: [
       {
-        name: 'Link 1',
-        description: 'Description.',
+        name: "Link 1",
+        description: "Description.",
       },
       {
-        name: 'Link 2',
-        description: 'Another description.',
+        name: "Link 2",
+        description: "Another description.",
       },
       {
-        name: 'Link 3',
-        description: 'A very very long description that it needs to be wrapped.',
+        name: "Link 3",
+        description:
+          "A very very long description that it needs to be wrapped.",
       },
     ],
   }),

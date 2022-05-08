@@ -4,7 +4,7 @@
       <div class="p-5 bg-white rounded-mx shadow">
         <a href="#">
           <img
-            :src="this.$store.state.user.avatar"
+            :src="$store.state.user.avatar"
             class="rounded-circle mx-auto d-block mb-2 shadow-sm"
             alt="avatar"
             width="100"
@@ -12,9 +12,9 @@
           />
         </a>
         <p class="text-center">
-          <span class="fs-5">{{ this.$store.state.user.username }}</span>
+          <span class="fs-5">{{ $store.state.user.username }}</span>
           <span class="badge rounded-mx-pill bg-secondary align-text-bottom">{{
-            this.$store.state.user.role
+            $store.state.user.role
           }}</span>
         </p>
         <div class="text-center">
@@ -31,9 +31,9 @@
 </template>
 
 <style lang="scss" scoped>
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins';
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 
 @include media-breakpoint-up(md) {
   #major-section {
@@ -55,10 +55,10 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'NoticeBoard',
+  name: "NoticeBoard",
   data: () => ({
     notice: `
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin lacinia arcu quam, quis vulputate

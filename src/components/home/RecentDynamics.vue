@@ -30,15 +30,19 @@
                     <p class="card-text">
                       <a class="text-decoration-none" href="#">
                         {{ discussion.user.username }}
-                        <span class="badge rounded-mx-pill bg-primary align-text-bottom">{{
-                          discussion.user.role
-                        }}</span> </a
+                        <span
+                          class="badge rounded-mx-pill bg-primary align-text-bottom"
+                          >{{ discussion.user.role }}</span
+                        > </a
                       ><br />
                       in
-                      <a class="text-decoration-none" href="#">{{ discussion.catagory }}</a
+                      <a class="text-decoration-none" href="#">{{
+                        discussion.catagory
+                      }}</a
                       ><br />
                       <span class="text-muted"
-                        >{{ discussion.pub_date }} &middot; {{ discussion.replies }} replies</span
+                        >{{ discussion.pub_date }} &middot;
+                        {{ discussion.replies }} replies</span
                       >
                     </p>
                   </div>
@@ -54,7 +58,11 @@
         <div class="p-4 bg-white rounded-mx shadow">
           <h5 class="mb-1">Latest Problems</h5>
           <div class="row">
-            <div class="col-12 mt-3" v-for="problem in problems" :key="problem.id">
+            <div
+              class="col-12 mt-3"
+              v-for="problem in problems"
+              :key="problem.id"
+            >
               <div class="card border-0 shadow-sm">
                 <div class="card-body">
                   <router-link
@@ -67,7 +75,8 @@
                   </router-link>
                   <p class="card-text">
                     <span class="text-muted">#{{ problem.id }}</span> &middot;
-                    {{ problem.difficulty }} &middot; by {{ problem.provider.username }}
+                    {{ problem.difficulty }} &middot; by
+                    {{ problem.provider.username }}
                   </p>
                 </div>
               </div>
@@ -79,7 +88,11 @@
         <div class="p-4 bg-white rounded-mx shadow">
           <h5 class="mb-1">Recent Contests</h5>
           <div class="row">
-            <div class="col-12 mt-3" v-for="contest in contests" :key="contest.id">
+            <div
+              class="col-12 mt-3"
+              v-for="contest in contests"
+              :key="contest.id"
+            >
               <div
                 class="card shadow-sm"
                 :class="
@@ -112,7 +125,11 @@
                           : 'bg-success'
                       "
                       >{{
-                        contest.status ? (contest.status > 0 ? 'Pending' : 'Ended') : 'In progress'
+                        contest.status
+                          ? contest.status > 0
+                            ? "Pending"
+                            : "Ended"
+                          : "In progress"
                       }}</span
                     >
                     {{ contest.name }}
@@ -123,9 +140,10 @@
                     <span class="text-muted">{{ contest.id }}</span> &middot; by
                     <a class="text-decoration-none" href="#">
                       {{ contest.organizer }}
-                      <span class="badge rounded-mx-pill bg-primary align-text-bottom">{{
-                        contest.type
-                      }}</span> </a
+                      <span
+                        class="badge rounded-mx-pill bg-primary align-text-bottom"
+                        >{{ contest.type }}</span
+                      > </a
                     ><br />
                     {{ contest.date }} &middot; {{ contest.duration }}
                   </p>
@@ -140,9 +158,9 @@
 </template>
 
 <style lang="scss" scoped>
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins';
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 
 @include media-breakpoint-up(md) {
   .discussion-avatar {
@@ -180,61 +198,62 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 const wbh07 = {
-  username: 'wbh07',
-  avatar: 'https://q1.qlogo.cn/g?b=qq&nk=3415751684&s=640',
-  role: 'admin',
+  username: "wbh07",
+  avatar: "https://q1.qlogo.cn/g?b=qq&nk=3415751684&s=640",
+  role: "admin",
 };
 const wxh06 = {
-  username: 'wxh06',
-  avatar: 'https://q1.qlogo.cn/g?b=qq&nk=1659133940&s=640',
-  role: 'admin',
+  username: "wxh06",
+  avatar: "https://q1.qlogo.cn/g?b=qq&nk=1659133940&s=640",
+  role: "admin",
 };
 const bohanjun = {
-  username: 'bohanjun',
-  avatar: 'https://q1.qlogo.cn/g?b=qq&nk=3416885501&s=640',
-  role: 'admin',
+  username: "bohanjun",
+  avatar: "https://q1.qlogo.cn/g?b=qq&nk=3416885501&s=640",
+  role: "admin",
 };
 const ForkKILLET = {
-  username: 'ForkKILLET',
-  avatar: 'https://q1.qlogo.cn/g?b=qq&nk=1096694717&s=640',
+  username: "ForkKILLET",
+  avatar: "https://q1.qlogo.cn/g?b=qq&nk=1096694717&s=640",
+  role: "",
 };
 
 export default defineComponent({
-  name: 'RecentDynamics',
+  name: "RecentDynamics",
   data: () => ({
     discussions: [
       {
         id: 4,
-        title: 'Long Discussion Title',
-        catagory: 'Academic',
-        pub_date: '9:40 Apr 21',
+        title: "Long Discussion Title",
+        catagory: "Academic",
+        pub_date: "9:40 Apr 21",
         replies: 81,
         user: wbh07,
       },
       {
         id: 3,
-        title: 'Another Discussion Title',
-        catagory: 'Entertainment',
-        pub_date: '9:25 Apr 21',
+        title: "Another Discussion Title",
+        catagory: "Entertainment",
+        pub_date: "9:25 Apr 21",
         replies: 12,
         user: wxh06,
       },
       {
         id: 2,
-        title: 'Short Two',
-        catagory: 'Academic',
-        pub_date: '8:53 Apr 21',
+        title: "Short Two",
+        catagory: "Academic",
+        pub_date: "8:53 Apr 21",
         replies: 0,
         user: bohanjun,
       },
       {
         id: 1,
-        title: 'Short One',
-        catagory: 'Entertainment',
-        pub_date: '8:07 Apr 21',
+        title: "Short One",
+        catagory: "Entertainment",
+        pub_date: "8:07 Apr 21",
         replies: 51,
         user: ForkKILLET,
       },
@@ -242,55 +261,55 @@ export default defineComponent({
     problems: [
       {
         id: 4,
-        title: 'Problem Title 4',
-        difficulty: 'Easy',
+        title: "Problem Title 4",
+        difficulty: "Easy",
         provider: wbh07,
       },
       {
         id: 3,
-        title: 'Problem Title 3',
-        difficulty: 'Master',
+        title: "Problem Title 3",
+        difficulty: "Master",
         provider: wxh06,
       },
       {
         id: 2,
-        title: 'Problem Title 2',
-        difficulty: 'Terrible',
+        title: "Problem Title 2",
+        difficulty: "Terrible",
         provider: wbh07,
       },
       {
         id: 1,
-        title: 'Problem Title 1',
-        difficulty: 'Noob',
+        title: "Problem Title 1",
+        difficulty: "Noob",
         provider: wbh07,
       },
     ],
     contests: [
       {
-        id: 'pi-round-3',
-        name: 'Pi Round III',
+        id: "pi-round-3",
+        name: "Pi Round III",
         status: 1,
-        organizer: 'piterator-org',
-        type: 'official',
-        date: '9:40 04/21/2022',
-        duration: '3 hours 30 minutes',
+        organizer: "piterator-org",
+        type: "official",
+        date: "9:40 04/21/2022",
+        duration: "3 hours 30 minutes",
       },
       {
-        id: 'pi-round-2',
-        name: 'Pi Round II',
+        id: "pi-round-2",
+        name: "Pi Round II",
         status: 0,
-        organizer: 'piterator-org',
-        type: 'official',
-        date: '15:20 04/15/2022',
-        duration: '4 hours',
+        organizer: "piterator-org",
+        type: "official",
+        date: "15:20 04/15/2022",
+        duration: "4 hours",
       },
       {
-        id: 'af-2022',
-        name: 'Completed April Fools 2022',
+        id: "af-2022",
+        name: "Completed April Fools 2022",
         status: -1,
-        organizer: 'april-fools-team',
-        date: '0:00 04/01/2022',
-        duration: '8 hours',
+        organizer: "april-fools-team",
+        date: "0:00 04/01/2022",
+        duration: "8 hours",
       },
     ],
   }),
